@@ -1,0 +1,23 @@
+name: Assets Check
+author: Tanyi Chen
+description: Check SHA256 for the github release assets
+inputs:
+  token:
+    description: Github token
+    default: ${{ github.token }}
+  repo:
+    description: Github repository
+    default: ${{ github.repository }}
+  tags:
+    description: Release assets tags, default is the latest tag
+runs:
+  using: composite
+  steps:
+    - name: Download Assets and Check SHA256
+      run: |
+        ${GITHUB_ACTION_PATH}/download-assets.py ${{ inputs.tags }}
+        ${GITHUB_ACTION_PATH}/sha256check.sh
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.token }}
+        GITHUB_REPOSITORY: ${{ inputs.repo }}
